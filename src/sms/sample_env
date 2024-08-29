@@ -1,0 +1,15 @@
+SECRET_KEY=''
+DB_NAME=''
+DB_USER=''
+DB_PASSWORD=''
+DB_SERVER=''
+#------------------------------------------------------------------
+# Amazon Web Services
+#------------------------------------------------------------------
+AWS_ACCESS_KEY_ID=''
+AWS_SECRET_ACCESS_KEY=''
+AWS_SES_REGION_NAME=''
+AWS_SES_REGION_ENDPOINT=''
+AWS_SES_CONFIGURATION_SET=''
+#-----------------------------------------------------------------
+OTP_EXPIRY_TIME=2
