@@ -16,16 +16,18 @@ class StudentDetailCreate(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            content_data = {}
-            content_data['provided_by'] = "Soundarya API services"
-            content_data['success'] = True
-            content_data['status'] = 200
-            content_data['data'] = serializer.data
+            content_data = {
+                'provided_by': "SMS API services",
+                'success': True,
+                'status': 200,
+                'data': serializer.data,
+            }
             return Response(content_data)
         else:
-            content_data = {}
-            content_data['provided_by'] = "Soundarya API services"
-            content_data['success'] = False
-            content_data['status'] = 400
-            content_data['error'] = serializer.errors
+            content_data = {
+                'provided_by': "SMS API services",
+                'success': False,
+                'status': 400,
+                'error': serializer.errors,
+            }
             return Response(content_data)
