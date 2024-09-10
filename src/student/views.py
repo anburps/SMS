@@ -33,10 +33,10 @@ class StudentDetailCreate(APIView):
             return Response(content_data)
 
 class StudentDetailList(APIView):
-    serializer_class = StudentSerializers.StudentDetailSerializer
+    serializer_class = StudentSerializers.StudentDetailUpdateSerializer
     def get(self, request, *args, **kwargs):
-        get_data_qset = StudentSerializers.StudentDetailSerializer
-        serializer = StudentSerializers.StudentDetailSerializer(get_data_qset, many=True)
+        get_data_qset = StudentSerializers.StudentDetailUpdateSerializer
+        serializer = StudentSerializers.StudentDetailUpdateSerializer(get_data_qset, many=True)
         content_data = {
             'provided_by': "SMS API services",
             'success': True,
@@ -46,10 +46,10 @@ class StudentDetailList(APIView):
         return Response(content_data)
 
 class StudentDetailUpdate(APIView):
-    serializer_class = StudentSerializers.StudentDetailSerializer
+    serializer_class = StudentSerializers.StudentDetailUpdateSerializer
     def get(self, request, *args, **kwargs):
-        get_data_qset = StudentSerializers.StudentDetailSerializer
-        serializer = StudentSerializers.StudentDetailSerializer(get_data_qset, many=True)
+        get_data_qset = StudentSerializers.StudentDetailUpdateSerializer
+        serializer = StudentSerializers.StudentDetailUpdateSerializer(get_data_qset, many=True)
         content_data = {
             'provided_by': "SMS API services",
             'success': True,
