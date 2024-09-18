@@ -22,3 +22,17 @@ class StudentDetailUpdateSerializer(serializers.ModelSerializer):
             'address',
             'profile_picture'
         )
+
+class CourceCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentModels.Course
+        fields =(
+            'course_name',
+            'course_code',
+            'description',
+            'credits',
+            'duration_weeks',
+            'start_date'
+        )
+class EnrollmentSerializer(serializers.ModelSerializer):
+    

@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from student import serializers as StudentSerializers
 
-# Create your views here.
 
        
 class StudentDetailCreate(APIView):
@@ -70,3 +69,5 @@ class StudentDetailDelete(APIView):
             'data': serializer.data,
         }
         return Response(content_data)
+
+class CourceCreate()
