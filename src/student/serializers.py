@@ -1,8 +1,46 @@
 from rest_framework import serializers
-from student import models as StudentModels
-
-
-class StudentDetailSerializer(serializers.ModelSerializer):
+from .models import *
+class StudentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = StudentModels.StudentDetials
-        fields ="__all__"
+        model = Student
+        fields = '__all__'
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = '__all__'
+
+class EnrollmentSerializer(serializers.ModelSerializer):
+    student = StudentSerializer(read_only=True)
+    course = CourseSerializer(read_only=True)
+
+    class Meta:
+        model = Enrollment
+        fields = '__all__'
+
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        fields = '__all__'
+
+class AssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Assignment
+        fields = '__all__'
+
+class GradeSerializer(serializers.ModelSerializer):
+    student = StudentSerializer(read_only=True)
+    course = CourseSerializer(read_only=True)
+    assignment = AssignmentSerializer(read_only=True)
+
+    class Meta:
+        model = Grade
+        fields = '__all__'
+
+class AttendanceSerializer(serializers.ModelSerializer):
+    student = StudentSerializer(read_only=True)
+    course = CourseSerializer(read_only=True)
+
+    class Meta:
+        model = Attendance
+        fields = '__all__'
