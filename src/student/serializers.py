@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import *
-class StudentSerializer(serializers.ModelSerializer):
+class StudentDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = '__all__'
@@ -11,7 +11,7 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class EnrollmentSerializer(serializers.ModelSerializer):
-    student = StudentSerializer(read_only=True)
+    student = StudentDetailSerializer(read_only=True)
     course = CourseSerializer(read_only=True)
 
     class Meta:
@@ -29,7 +29,7 @@ class AssignmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class GradeSerializer(serializers.ModelSerializer):
-    student = StudentSerializer(read_only=True)
+    student = StudentDetailSerializer(read_only=True)
     course = CourseSerializer(read_only=True)
     assignment = AssignmentSerializer(read_only=True)
 
@@ -38,7 +38,7 @@ class GradeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AttendanceSerializer(serializers.ModelSerializer):
-    student = StudentSerializer(read_only=True)
+    student = StudentDetailSerializer(read_only=True)
     course = CourseSerializer(read_only=True)
 
     class Meta:
