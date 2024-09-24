@@ -4,6 +4,9 @@ class StudentDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = '__all__'
+    
+    def create(self, validated_data):
+        dob = 
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
