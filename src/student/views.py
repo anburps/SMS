@@ -215,6 +215,16 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
                 'error': serializer.errors,
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, *args, **kwargs):
+        course=self.get_object()
+        course.delete()
+        content_data = {
+            'provided_by': "SMS API services",
+            'success': True,
+            'status': 204,
+            'message': "Course successfully deleted."
+        }
+        return Response(content_data, status=status.HTTP_204_NO_CONTENT)
 
 class EnrollmentCreateView(GenericAPIView):
     serializer_class = StudentSerializers.EnrollmentSerializer
