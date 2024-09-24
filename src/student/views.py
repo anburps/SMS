@@ -162,7 +162,38 @@ class CourseListCreateView(generic.ListCreateAPIView):
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
-            
+
+class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Course.objects.all()
+    serializer_class =  StudentSerializers.CourseDetailSerializer
+
+    def get_object(self):
+        try:
+            return Course.objects.get(id=self.kwargs['id'])
+        except Course.DoesNotExist:
+            raise Http404("Course not found.")
+    def put(self, request, *args, **kwargs):
+        course = self.get_object()  
+        serializer = self.get_serializer(course, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            content_data = {
+                'provided_by': "SMS API services",
+                'success': True,
+                'status': 200,
+                'data': serializer.data,
+            }
+            return Response(content_data, status=status.HTTP_200_OK)
+        else:
+            content_data = {
+                'provided_by': "SMS API services",
+                'success': False,
+                'status': 400,
+                'error': serializer.errors,
+            }
+            return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+
 class EnrollmentCreateView(GenericAPIView):
     serializer_class = StudentSerializers.EnrollmentSerializer
 
