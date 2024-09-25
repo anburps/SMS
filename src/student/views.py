@@ -6,9 +6,15 @@ from rest_framework.generics import GenericAPIView
 from student import serializers as StudentSerializers
 from rest_framework import status
 from .models import *
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+
 
 class StudentListCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.StudentDetailSerializer
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = Student.objects.all()
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -20,7 +26,7 @@ class StudentListCreateView(generics.ListCreateAPIView):
                 'status': 200,
                 'data': serializer.data,
             }
-            return Response(content_data, status=status.HTTP_200_OK)
+            return Response(content_data, status=status.HTTP_201_CREATED)  
         else:
             content_data = {
                 'provided_by': "SMS API services",
@@ -29,9 +35,10 @@ class StudentListCreateView(generics.ListCreateAPIView):
                 'error': serializer.errors,
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
-
     def get(self,request,*args,**kwargs):
         queryset        = Student.objects.all()
+        self.authentication_classes = [BasicAuthentication]
+        self.permission_classes = [IsAuthenticated]
 
         if queryset.exists():
             serializer = self.get_serializer(queryset, many=True)
@@ -118,8 +125,8 @@ class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
         }
         return Response(content_data, status=status.HTTP_204_NO_CONTENT)
 
-class CourseListCreateView(generic.ListCreateAPIView):
-    serializer_class = StudentSerializers.CourseSerializer
+class CourseListCreateView(generics.ListCreateAPIView):
+    serializer_class = StudentSerializers.CourseDetailSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
