@@ -18,6 +18,7 @@ class StudentDetailSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("User must be at least 18 years old.")
         
         return value
+        
 class CourseDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course

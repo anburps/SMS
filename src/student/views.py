@@ -9,6 +9,7 @@ from .models import *
 
 class StudentListCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.StudentDetailSerializer
+    queryset = Student.objects.all()
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -20,7 +21,7 @@ class StudentListCreateView(generics.ListCreateAPIView):
                 'status': 200,
                 'data': serializer.data,
             }
-            return Response(content_data, status=status.HTTP_200_OK)
+            return Response(content_data, status=status.HTTP_201_CREATED)  
         else:
             content_data = {
                 'provided_by': "SMS API services",
@@ -29,7 +30,6 @@ class StudentListCreateView(generics.ListCreateAPIView):
                 'error': serializer.errors,
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
-
     def get(self,request,*args,**kwargs):
         queryset        = Student.objects.all()
 
