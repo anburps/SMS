@@ -118,8 +118,8 @@ class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
         }
         return Response(content_data, status=status.HTTP_204_NO_CONTENT)
 
-class CourseListCreateView(generic.ListCreateAPIView):
-    serializer_class = StudentSerializers.CourseSerializer
+class CourseListCreateView(generics.ListCreateAPIView):
+    serializer_class = StudentSerializers.CourseDetailSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

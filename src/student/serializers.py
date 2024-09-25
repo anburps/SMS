@@ -5,17 +5,27 @@ class StudentDetailSerializer(serializers.ModelSerializer):
         model = Student
         fields = '__all__'
     
-    def create(self, validated_data):
-        dob = 
-
-class CourseSerializer(serializers.ModelSerializer):
+    
+    def validate_dob(self, value):
+        today = date.today()
+        
+        if value > today:
+            raise serializers.ValidationError("Date of birth cannot be in the future.")
+        
+        age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
+        
+        if age < 18:
+            raise serializers.ValidationError("User must be at least 18 years old.")
+        
+        return value
+class CourseDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
 
 class EnrollmentSerializer(serializers.ModelSerializer):
     student = StudentDetailSerializer(read_only=True)
-    course = CourseSerializer(read_only=True)
+    course = CourseDetailSerializer(read_only=True)
 
     class Meta:
         model = Enrollment
@@ -33,7 +43,7 @@ class AssignmentSerializer(serializers.ModelSerializer):
 
 class GradeSerializer(serializers.ModelSerializer):
     student = StudentDetailSerializer(read_only=True)
-    course = CourseSerializer(read_only=True)
+    course = CourseDetailSerializer(read_only=True)
     assignment = AssignmentSerializer(read_only=True)
 
     class Meta:
@@ -42,7 +52,7 @@ class GradeSerializer(serializers.ModelSerializer):
 
 class AttendanceSerializer(serializers.ModelSerializer):
     student = StudentDetailSerializer(read_only=True)
-    course = CourseSerializer(read_only=True)
+    course = CourseDetailSerializer(read_only=True)
 
     class Meta:
         model = Attendance
