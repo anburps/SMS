@@ -6,9 +6,14 @@ from rest_framework.generics import GenericAPIView
 from student import serializers as StudentSerializers
 from rest_framework import status
 from .models import *
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+
 
 class StudentListCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.StudentDetailSerializer
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Student.objects.all()
 
     def post(self, request, *args, **kwargs):
@@ -32,6 +37,8 @@ class StudentListCreateView(generics.ListCreateAPIView):
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
     def get(self,request,*args,**kwargs):
         queryset        = Student.objects.all()
+        self.authentication_classes = [BasicAuthentication]
+        self.permission_classes = [IsAuthenticated]
 
         if queryset.exists():
             serializer = self.get_serializer(queryset, many=True)
