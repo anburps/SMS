@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'student',
+    'rest_framework.authtoken',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +139,10 @@ EMAIL_USE_TLS=True
 EMAIL_PORT='587'
 EMAIL_HOST_USER='anbalaganrps@gmail.com'
 EMAIL_HOST_PASSWORD='ajzd rinf siuc qyon'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}

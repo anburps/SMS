@@ -1,32 +1,28 @@
 from django.db import models
-
-from django.contrib.auth.models import UserManager
-from django.contrib.auth.models import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
-from django.utils import timezone
+from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.utils.translation import gettext_lazy as _
 
 class MyUserManager(UserManager):
-   
     def create_user(self, email, password=None, **kwargs):
+        if not email:
+            raise ValueError(_('The Email field must be set'))
+        email = self.normalize_email(email)
         user = self.model(email=email, **kwargs)
-        # user.site = 'support.onlinejain.com'
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password, **kwargs):
-        user = self.model(email=email, is_staff=True,
-                          is_superuser=True, **kwargs)
-        # user.site = 'support.onlinejain.com'
-        user.set_password(password)
-        user.save()
-        return user
+    def create_superuser(self, email, password=None, **kwargs):
+        user = self.create_user(email=email, password=password, **kwargs)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return usera
 
-class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(_('email address'), blank=False, unique=True)
-    is_staff = models.BooleanField(_('staff status'), default=False)
-    is_active = models.BooleanField(_('active'), default=True)
+class User(AbstractBaseUser):
+    email = models.EmailField(_('email address'), unique=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     objects = MyUserManager()
 
@@ -38,9 +34,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def name(self):
-        if self.display_name:
+        if hasattr(self, 'display_name') and self.display_name:
             return self.display_name
         return 'SMS_' + str(self.pk)
-
-
-    
