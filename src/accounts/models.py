@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 class MyUserManager(UserManager):
    
-    def create_user(self, email, password, **kwargs):
+    def create_user(self, email, password=None, **kwargs):
         user = self.model(email=email, **kwargs)
         # user.site = 'support.onlinejain.com'
         user.set_password(password)

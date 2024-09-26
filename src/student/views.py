@@ -8,13 +8,21 @@ from rest_framework import status
 from .models import *
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.filters import SearchFilter
+from rest_framework.pagination import PageNumberPagination
+# pagination.py
+class CustomPageNumberPagination(PageNumberPagination):
+    page_size = 2  
+    page_size_query_param = 'page_size'  
+    max_page_size = 100  
 
 
 class StudentListCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.StudentDetailSerializer
-    authentication_classes = [BasicAuthentication]
-    permission_classes = [IsAuthenticated]
     queryset = Student.objects.all()
+    filter_backends = [SearchFilter]
+    search_fields = ['first_name', 'last_name', 'phone_number', 'email']
+    pagination_class = CustomPageNumberPagination
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -26,7 +34,7 @@ class StudentListCreateView(generics.ListCreateAPIView):
                 'status': 200,
                 'data': serializer.data,
             }
-            return Response(content_data, status=status.HTTP_201_CREATED)  
+            return Response(content_data, status=status.HTTP_201_CREATED)
         else:
             content_data = {
                 'provided_by': "SMS API services",
@@ -35,15 +43,28 @@ class StudentListCreateView(generics.ListCreateAPIView):
                 'error': serializer.errors,
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
-    def get(self,request,*args,**kwargs):
-        queryset        = Student.objects.all()
+
+    def get(self, request, *args, **kwargs):
         self.authentication_classes = [BasicAuthentication]
         self.permission_classes = [IsAuthenticated]
 
+        queryset = self.filter_queryset(self.get_queryset())
+
         if queryset.exists():
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                content_data = {
+                    'provided_by': "SMS API service per page 2 data here.",
+                    'success': True,
+                    'status': 200,
+                    'data': serializer.data,
+                }
+                return self.get_paginated_response(content_data)
+
             serializer = self.get_serializer(queryset, many=True)
             content_data = {
-                'provided_by': "SMS API services",
+                'provided_by': "SMS API service per page 2 data here.",
                 'success': True,
                 'status': 200,
                 'data': serializer.data,
