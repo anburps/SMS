@@ -21,7 +21,7 @@ class StudentListCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.StudentDetailSerializer
     queryset = Student.objects.all()
     filter_backends = [SearchFilter]
-    search_fields = ['first_name', 'phone_number', 'email']
+    search_fields = ['first_name', 'last_name', 'phone_number', 'email']
     pagination_class = CustomPageNumberPagination
 
     def post(self, request, *args, **kwargs):
