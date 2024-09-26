@@ -1,12 +1,14 @@
 from rest_framework import serializers
 from .models import *
+from datetime import date 
+
 class StudentDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = '__all__'
     
     
-    def validate_dob(self, value):
+    def validate_date_of_birth(self, value):
         today = date.today()
         
         if value > today:
