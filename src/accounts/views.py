@@ -3,9 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import BasicAuthentication
 from django.contrib.auth import login, logout
-from .models import User
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
-
+from .models import *
+from .serializers import *
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
