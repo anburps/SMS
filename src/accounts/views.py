@@ -18,7 +18,6 @@ class UserRegistrationView(generics.CreateAPIView):
         email = request.data.get('email')
         password = request.data.get('password')
 
-        # Check if user with the given email already exists
         if User.objects.filter(email=email).exists():
             
             content_data = {
@@ -29,15 +28,12 @@ class UserRegistrationView(generics.CreateAPIView):
             }
             return Response(content_data)
 
-        # Create the user using the serializer
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
-        # Generate token for the user
         token, created = Token.objects.get_or_create(user=user)
 
-        # Return response with token
         content_data = {
             'provide_by': "SMS API services",
             'success': True,
