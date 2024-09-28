@@ -24,6 +24,15 @@ class StudentListCreateView(generics.ListCreateAPIView):
     search_fields = ['first_name', 'last_name', 'phone_number', 'email']
     pagination_class = CustomPageNumberPagination
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            self.authentication_classes = [BasicAuthentication]
+            self.permission_classes = [IsAuthenticated]
+        elif request.method == 'GET':
+            self.authentication_classes = []
+            self.permission_classes = [AllowAny]
+        return super().dispatch(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -45,9 +54,6 @@ class StudentListCreateView(generics.ListCreateAPIView):
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, *args, **kwargs):
-        self.authentication_classes = [BasicAuthentication]
-        self.permission_classes = [IsAuthenticated]
-
         queryset = self.filter_queryset(self.get_queryset())
 
         if queryset.exists():
@@ -79,7 +85,6 @@ class StudentListCreateView(generics.ListCreateAPIView):
                 'error': "No data found",
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
-
 
 class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
