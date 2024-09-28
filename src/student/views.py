@@ -7,7 +7,7 @@ from student import serializers as StudentSerializers
 from rest_framework import status
 from .models import *
 from rest_framework.authentication import BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 # pagination.py
