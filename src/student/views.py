@@ -6,7 +6,7 @@ from rest_framework.generics import GenericAPIView
 from student import serializers as StudentSerializers
 from rest_framework import status
 from .models import *
-from rest_framework.authentication import BasicAuthentication
+from rest_framework.authentication import BasicAuthentication,TokenAuthentication
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
@@ -26,7 +26,7 @@ class StudentListCreateView(generics.ListCreateAPIView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
-            self.authentication_classes = [BasicAuthentication]
+            self.authentication_classes = [BasicAuthentication,TokenAuthentication]
             self.permission_classes = [IsAuthenticated]
         elif request.method == 'GET':
             self.authentication_classes = []
