@@ -167,6 +167,8 @@ class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class CourseListCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.CourseDetailSerializer
+    authentication_classes = [BasicAuthentication,TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
