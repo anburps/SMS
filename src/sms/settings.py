@@ -140,9 +140,12 @@ EMAIL_PORT='587'
 EMAIL_HOST_USER='anbalaganrps@gmail.com'
 EMAIL_HOST_PASSWORD='ajzd rinf siuc qyon'
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ],
 }
