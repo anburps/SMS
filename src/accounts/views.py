@@ -2,7 +2,7 @@ from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import BasicAuthentication, TokenAuthentication
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate,logout
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticated
@@ -30,17 +30,23 @@ class LoginView(ObtainAuthToken):
             'token': token.key,
             'user_id': user.id,
             'email': user.email,
-            'username': user.username
+            'username': user.username,
+            'message': 'Login successful.'
         })
+
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication, BasicAuthentication]
 
     def post(self, request, *args, **kwargs):
-        request.user.auth_token.delete()
+        if hasattr(request.user, 'auth_token'):
+            request.user.auth_token.delete()
+
         logout(request)
+
         return Response({"message": "Logout successful."}, status=status.HTTP_200_OK)
+
 
 class ProtectedView(APIView):
     permission_classes = [IsAuthenticated]
