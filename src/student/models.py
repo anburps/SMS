@@ -27,12 +27,12 @@ class Student(models.Model):
         return self.full_name()
 
 class Course(models.Model):
-    course_name = models.CharField(max_length=100)
-    course_code = models.CharField(max_length=10, unique=True)
-    description = models.TextField(blank=True, null=True)
-    credits = models.IntegerField(default=0)
-    duration_weeks = models.IntegerField(default=12)
-    start_date = models.DateField()
+    course_name     = models.CharField(max_length=100)
+    course_code     = models.CharField(max_length=10, unique=True)
+    description     = models.TextField(blank=True, null=True)
+    credits         = models.IntegerField(default=0)
+    duration_weeks  = models.IntegerField(default=12)
+    start_date      = models.DateField()
 
     def end_date(self):
         return self.start_date + timezone.timedelta(weeks=self.duration_weeks)

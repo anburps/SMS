@@ -22,6 +22,7 @@ class StudentListCreateView(generics.ListCreateAPIView):
     queryset = Student.objects.all()
     filter_backends = [SearchFilter]
     search_fields = ['first_name', 'last_name', 'phone_number', 'email']
+    ordering    = ['-id']
     pagination_class = CustomPageNumberPagination
 
     def dispatch(self, request, *args, **kwargs):
@@ -167,6 +168,8 @@ class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class CourseListCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.CourseDetailSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['course_name', 'course_code']
     authentication_classes = [BasicAuthentication,TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
