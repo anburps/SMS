@@ -169,7 +169,6 @@ class CourseListCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.CourseDetailSerializer
     filter_backends = [SearchFilter]
     search_fields = ['course_name', 'course_code']
-    
 
     def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
@@ -285,8 +284,19 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
         }
         return Response(content_data, status=status.HTTP_204_NO_CONTENT)
 
-class EnrollmentCreateView(GenericAPIView):
+class EnrollmentCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.EnrollmentSerializer
+    data = Enrollment.objects.all()
+
+    def def dispatch(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            self.authentication_classes = [BasicAuthentication,TokenAuthentication]
+            self.permission_classes = [IsAuthenticated]
+        elif request.method == 'GET':
+            self.authentication_classes = []
+            self.permission_classes = [AllowAny]
+        return super().dispatch(request, *args, **kwargs)
+    
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
