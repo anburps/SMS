@@ -22,7 +22,7 @@ class StudentListCreateView(generics.ListCreateAPIView):
     queryset = Student.objects.all()
     filter_backends = [SearchFilter]
     search_fields = ['first_name', 'last_name', 'phone_number', 'email']
-    ordering    = ['-id']
+    ordering_fields = ['first_name', 'last_name', 'phone_number', 'email', '-id']
     pagination_class = CustomPageNumberPagination
 
     def dispatch(self, request, *args, **kwargs):
@@ -169,8 +169,16 @@ class CourseListCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.CourseDetailSerializer
     filter_backends = [SearchFilter]
     search_fields = ['course_name', 'course_code']
-    authentication_classes = [BasicAuthentication,TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            self.authentication_classes = [BasicAuthentication,TokenAuthentication]
+            self.permission_classes = [IsAuthenticated]
+        elif request.method == 'GET':
+            self.authentication_classes = []
+            self.permission_classes = [AllowAny]
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
