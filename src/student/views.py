@@ -87,7 +87,6 @@ class StudentListCreateView(generics.ListCreateAPIView):
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
-
 class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializers.StudentDetailSerializer

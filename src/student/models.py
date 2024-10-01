@@ -41,23 +41,23 @@ class Course(models.Model):
         return self.course_name
 
 class Enrollment(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    student         = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course          = models.ForeignKey(Course, on_delete=models.CASCADE)
     enrollment_date = models.DateField(auto_now_add=True)
-    grade = models.CharField(max_length=2, blank=True, null=True)
-    status = models.CharField(max_length=10, choices=STUDENT_DETAIL)
+    grade           = models.CharField(max_length=2, blank=True, null=True)
+    status          = models.CharField(max_length=10, choices=STUDENT_DETAIL)
 
     def __str__(self):
         return f"{self.student.full_name()} enrolled in {self.course.course_name}"
 
 
 class Teacher(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
-    department = models.CharField(max_length=100)
-    hire_date = models.DateField(auto_now_add=True)
+    first_name      = models.CharField(max_length=50)
+    last_name       = models.CharField(max_length=50)
+    email           = models.EmailField(unique=True)
+    phone_number    = models.CharField(max_length=15, blank=True, null=True)
+    department      = models.CharField(max_length=100)
+    hire_date       = models.DateField(auto_now_add=True)
     profile_picture = models.ImageField(upload_to='teacher_pics/', blank=True, null=True)
 
     def full_name(self):
@@ -68,12 +68,12 @@ class Teacher(models.Model):
 
 
 class Assignment(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField()
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    due_date = models.DateField()
-    assigned_date = models.DateField(auto_now_add=True)
-    max_score = models.DecimalField(max_digits=5, decimal_places=2, default=100.00)
+    title           = models.CharField(max_length=100)
+    description     = models.TextField()
+    course          = models.ForeignKey(Course, on_delete=models.CASCADE)
+    due_date        = models.DateField()
+    assigned_date   = models.DateField(auto_now_add=True)
+    max_score       = models.DecimalField(max_digits=5, decimal_places=2, default=100.00)
 
     def is_overdue(self):
         return timezone.now().date() > self.due_date
