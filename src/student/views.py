@@ -287,6 +287,8 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
 class EnrollmentCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.EnrollmentSerializer
     data = Enrollment.objects.all()
+    search_backends = [filters.SearchFilter]
+    search_fields = ['student__first_name', 'student__last_name', 'course__course_name', 'course__course_code']
 
     def def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
