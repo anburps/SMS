@@ -224,6 +224,8 @@ class CourseListCreateView(generics.ListCreateAPIView):
 class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Course.objects.all()
     serializer_class =  StudentSerializers.CourseDetailSerializer
+    authentication_classes = [BasicAuthentication,TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         try:
@@ -402,7 +404,7 @@ class EntrollmentDetailView(generics.RetrieveUpdateDestroyAPIView):
         }
         return Response(content_data, status=status.HTTP_204_NO_CONTENT)
 
-        
+
 class GradeCreateView(GenericAPIView):
     serializer_class = StudentSerializers.GradeSerializer
 
