@@ -289,7 +289,7 @@ class EnrollmentCreateView(generics.ListCreateAPIView):
     data = Enrollment.objects.all()
     search_backends = [filters.SearchFilter]
     search_fields = ['student__first_name', 'student__last_name', 'course__course_name', 'course__course_code']
-
+    
     def def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
             self.authentication_classes = [BasicAuthentication,TokenAuthentication]
@@ -299,7 +299,6 @@ class EnrollmentCreateView(generics.ListCreateAPIView):
             self.permission_classes = [AllowAny]
         return super().dispatch(request, *args, **kwargs)
     
-
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -319,6 +318,7 @@ class EnrollmentCreateView(generics.ListCreateAPIView):
                 'error': serializer.errors,
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+
     def get(self, request, *args, **kwargs):
         if queryset.exists():
             serializer = self.get_serializer(queryset, many=True)
@@ -338,7 +338,37 @@ class EnrollmentCreateView(generics.ListCreateAPIView):
                 'error': "No data found",
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+class EntrollmentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Enrollment.objects.all()
+    serializer_class =  StudentSerializers.EnrollmentSerializer
 
+    def get_object(self):
+        try:
+            return Enrollment.objects.get(id=self.kwargs['id'])
+        except Enrollment.DoesNotExist:
+            raise Http404("Enrollment not found.")
+
+    def put(self, request, *args, **kwargs):
+        enrollment = self.get_object()  
+        serializer = self.get_serializer(enrollment, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            content_data = {
+                'provided_by': "SMS API services",
+                'success': True,
+                'status': 200,
+                'data': serializer.data,
+            }
+            return Response(content_data, status=status.HTTP_200_OK)
+        else:
+            content_data = {
+                'provided_by': "SMS API services",
+                'success': False,
+                'status': 400,
+                'error': serializer.errors,
+            }
+            return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
 class GradeCreateView(GenericAPIView):
     serializer_class = StudentSerializers.GradeSerializer
