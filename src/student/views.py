@@ -343,7 +343,9 @@ class EnrollmentCreateView(generics.ListCreateAPIView):
 class EntrollmentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Enrollment.objects.all()
     serializer_class =  StudentSerializers.EnrollmentSerializer
-
+    authentication_classes = [BasicAuthentication,TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get_object(self):
         try:
             return Enrollment.objects.get(id=self.kwargs['id'])
