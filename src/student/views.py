@@ -345,7 +345,7 @@ class EntrollmentDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class =  StudentSerializers.EnrollmentSerializer
     authentication_classes = [BasicAuthentication,TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    
+
     def get_object(self):
         try:
             return Enrollment.objects.get(id=self.kwargs['id'])
@@ -409,6 +409,16 @@ class EntrollmentDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class GradeCreateView(GenericAPIView):
     serializer_class = StudentSerializers.GradeSerializer
+
+    def def dispatch(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            self.authentication_classes = [BasicAuthentication,TokenAuthentication]
+            self.permission_classes = [IsAuthenticated]
+        elif request.method == 'GET':
+            self.authentication_classes = []
+            self.permission_classes = [AllowAny]
+        return super().dispatch(request, *args, **kwargs)
+    
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
