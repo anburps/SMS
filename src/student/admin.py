@@ -20,6 +20,7 @@ class CourseAdmin(admin.ModelAdmin):
     list_display    = ('course_name', 'course_code', 'description', 'credits', 'duration_weeks', 'start_date', 'end_date')
     search_fields   =  ('course_name', 'course_code')
     ordering        = ['-id']
+    
 
 class EnrollmentAdmin(admin.ModelAdmin):
     list_display    = ('student', 'course', 'enrollment_date', 'grade', 'status')
