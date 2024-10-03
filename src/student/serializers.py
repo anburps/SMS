@@ -7,6 +7,16 @@ class StudentDetailSerializer(serializers.ModelSerializer):
         model = Student
         fields = '__all__'
     
+    def validate_full_name(self, value):
+        if not value.isalpha():
+            raise serializers.ValidationError("Full name must contain only letters.")
+
+        return value
+    def validate_last_name(self, value):
+        if not value.isalpha():
+            raise serializers.ValidationError("Last name must contain only letters.")
+
+        return value
     
     def validate_date_of_birth(self, value):
         today = date.today()
