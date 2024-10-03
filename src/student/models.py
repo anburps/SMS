@@ -82,11 +82,11 @@ class Assignment(models.Model):
         return self.title
 
 class Grade(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
-    score = models.DecimalField(max_digits=5, decimal_places=2)
-    grade_date = models.DateField(auto_now_add=True)
+    student     = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course      = models.ForeignKey(Course, on_delete=models.CASCADE)
+    assignment  = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    score       = models.DecimalField(max_digits=5, decimal_places=2)
+    grade_date  = models.DateField(auto_now_add=True)
 
     def percentage(self):
         return (self.score / self.assignment.max_score) * 100
@@ -95,10 +95,10 @@ class Grade(models.Model):
         return f"{self.student.full_name()} - {self.assignment.title}: {self.score}"
 
 class Attendance(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    date = models.DateField()
-    status = models.CharField(max_length=10, choices=[('Present', 'Present'), ('Absent', 'Absent')])
+    student     = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course      = models.ForeignKey(Course, on_delete=models.CASCADE)
+    date        = models.DateField()
+    status      = models.CharField(max_length=10, choices=[('Present', 'Present'), ('Absent', 'Absent')])
 
     def __str__(self):
         return f"{self.student.full_name()} - {self.date}: {self.status}"

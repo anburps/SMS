@@ -417,8 +417,7 @@ class GradeCreateView(GenericAPIView):
         elif request.method == 'GET':
             self.authentication_classes = []
             self.permission_classes = [AllowAny]
-        return super().dispatch(request, *args, **kwargs)
-    
+        return super().dispatch(request, *args, **kwargs)    
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -438,6 +437,7 @@ class GradeCreateView(GenericAPIView):
                 'error': serializer.errors,
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+
     def get(self, request, *args, **kwargs):
         if queryset.exists():
             serializer = self.get_serializer(queryset, many=True)
@@ -457,7 +457,6 @@ class GradeCreateView(GenericAPIView):
                 'error': "No data found",
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
-
 
 class AttendanceCreateView(GenericAPIView):
     serializer_class = StudentSerializers.AttendanceSerializer
