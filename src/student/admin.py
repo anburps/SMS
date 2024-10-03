@@ -6,6 +6,16 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields   =  ('full_name', 'email')
     ordering        = ['-id']
 
+    def full_name(self, obj):
+        return obj.first_name + " " + obj.last_name
+
+    full_name.short_description = 'Full Name'
+
+    def email(self, obj):
+        return obj.email
+
+    email.short_description = 'Email'
+
 class CourseAdmin(admin.ModelAdmin):
     list_display    = ('course_name', 'course_code', 'description', 'credits', 'duration_weeks', 'start_date', 'end_date')
     search_fields   =  ('course_name', 'course_code')
@@ -16,12 +26,12 @@ class EnrollmentAdmin(admin.ModelAdmin):
     search_fields   =  ('student__full_name', 'course__course_name')
     ordering        = ['-id']
 
+    
+
 class GradeAdmin(admin.ModelAdmin):
     list_display    = ('student', 'course', 'assignment', 'score', 'grade_date')
     search_fields   =  ('student__full_name', 'assignment__title')
     ordering        = ['-id']
-
-
 
 class TeacherAdmin(admin.ModelAdmin):
     list_display    = ('full_name', 'email', 'phone_number', 'department', 'hire_date', 'profile_picture')
