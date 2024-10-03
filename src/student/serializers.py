@@ -35,12 +35,17 @@ class StudentDetailSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Phone number must be 10 digits long.")
         
         return value
-        
+   
 class CourseDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
     
+    def validate_course_name(self,value):
+        if not value.isalpha():
+            raise serializers.ValidationError("Full name must contain only letters.")
+
+        return value
     def validate_start_date(self, value):
         today = date.today()
         
