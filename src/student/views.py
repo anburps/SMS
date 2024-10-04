@@ -409,7 +409,7 @@ class EntrollmentDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class GradeCreateView(GenericAPIView):
     serializer_class = StudentSerializers.GradeSerializer
-
+    authentication_classes = [BasicAuthentication,TokenAuthentication]
     def def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
             self.authentication_classes = [BasicAuthentication,TokenAuthentication]
@@ -460,6 +460,7 @@ class GradeCreateView(GenericAPIView):
 
 class AttendanceCreateView(GenericAPIView):
     serializer_class = StudentSerializers.AttendanceSerializer
+
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
