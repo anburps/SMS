@@ -411,7 +411,7 @@ class GradeCreateView(GenericAPIView):
     serializer_class = StudentSerializers.GradeSerializer
     data = Enrollment.objects.all()
     search_backends = [filters.SearchFilter]
-    search_fields = ['student__first_name', 'student__last_name', 'course__course_name', 'course__course_code']
+    search_fields = ['student__first_name', 'student__last_name', 'course__course_name', 'course__course_code','grade']
 
     def def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
