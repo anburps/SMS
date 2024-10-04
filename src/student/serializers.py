@@ -37,6 +37,7 @@ class StudentDetailSerializer(serializers.ModelSerializer):
         return value
    
 class CourseDetailSerializer(serializers.ModelSerializer):
+    studentcourse = StudentDetailSerializer(many=True)
     class Meta:
         model = Course
         fields = '__all__'
