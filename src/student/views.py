@@ -10,7 +10,7 @@ from rest_framework.authentication import BasicAuthentication,TokenAuthenticatio
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
-
+from django.core.cache import cache
 class CustomPageNumberPagination(PageNumberPagination):
     page_size = 2  
     page_size_query_param = 'page_size'  
@@ -55,37 +55,44 @@ class StudentListCreateView(generics.ListCreateAPIView):
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
+        cached_students = cache.get('student_list')
 
-        if queryset.exists():
-            page = self.paginate_queryset(queryset)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
+        if cached_students is None:
+            queryset = self.filter_queryset(self.get_queryset())
+
+            if queryset.exists():
+                cache.set('student_list', queryset, timeout=60*10)
+            else:
                 content_data = {
-                    'provided_by': "SMS API service per page 2 data here.",
-                    'success': True,
-                    'status': 200,
-                    'data': serializer.data,
+                    'provided_by': "SMS API services",
+                    'success': False,
+                    'status': 400,
+                    'error': "No data found",
                 }
-                return self.get_paginated_response(content_data)
+                return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            queryset = cached_students
 
-            serializer = self.get_serializer(queryset, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
             content_data = {
                 'provided_by': "SMS API service per page 2 data here.",
                 'success': True,
                 'status': 200,
                 'data': serializer.data,
-                'count': queryset.count(),
             }
-            return Response(content_data, status=status.HTTP_200_OK)
-        else:
-            content_data = {
-                'provided_by': "SMS API services",
-                'success': False,
-                'status': 400,
-                'error': "No data found",
-            }
-            return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+            return self.get_paginated_response(content_data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        content_data = {
+            'provided_by': "SMS API service per page 2 data here.",
+            'success': True,
+            'status': 200,
+            'data': serializer.data,
+            'count': queryset.count(),
+        }
+        return Response(content_data, status=status.HTTP_200_OK)
 
 class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
@@ -289,10 +296,9 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
 class EnrollmentCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.EnrollmentSerializer
     data = Enrollment.objects.all()
-    search_backends = [filters.SearchFilter]
-    search_fields = ['student__first_name', 'student__last_name', 'course__course_name', 'course__course_code']
     
-    def def dispatch(self, request, *args, **kwargs):
+
+    def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
             self.authentication_classes = [BasicAuthentication,TokenAuthentication]
             self.permission_classes = [IsAuthenticated]
@@ -410,10 +416,8 @@ class EntrollmentDetailView(generics.RetrieveUpdateDestroyAPIView):
 class GradeCreateView(GenericAPIView):
     serializer_class = StudentSerializers.GradeSerializer
     data = Enrollment.objects.all()
-    search_backends = [filters.SearchFilter]
-    search_fields = ['student__first_name', 'student__last_name', 'course__course_name', 'course__course_code','grade']
-
-    def def dispatch(self, request, *args, **kwargs):
+    
+    def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
             self.authentication_classes = [BasicAuthentication,TokenAuthentication]
             self.permission_classes = [IsAuthenticated]
