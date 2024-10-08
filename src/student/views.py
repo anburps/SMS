@@ -55,37 +55,45 @@ class StudentListCreateView(generics.ListCreateAPIView):
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
+        cached_products = cache.get('product_list')
 
-        if queryset.exists():
-            page = self.paginate_queryset(queryset)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
+        if cached_products is None:
+            queryset = self.filter_queryset(self.get_queryset())
+
+            if queryset.exists():
+                cache.set('product_list', queryset, timeout=60*2)
+            else:
                 content_data = {
-                    'provided_by': "SMS API service per page 2 data here.",
-                    'success': True,
-                    'status': 200,
-                    'data': serializer.data,
+                    'provided_by': "SMS API services",
+                    'success': False,
+                    'status': 400,
+                    'error': "No data found",
                 }
-                return self.get_paginated_response(content_data)
+                return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            queryset = cached_products
 
-            serializer = self.get_serializer(queryset, many=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
             content_data = {
                 'provided_by': "SMS API service per page 2 data here.",
                 'success': True,
                 'status': 200,
                 'data': serializer.data,
-                'count': queryset.count(),
             }
-            return Response(content_data, status=status.HTTP_200_OK)
-        else:
-            content_data = {
-                'provided_by': "SMS API services",
-                'success': False,
-                'status': 400,
-                'error': "No data found",
-            }
-            return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+            return self.get_paginated_response(content_data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        content_data = {
+            'provided_by': "SMS API service per page 2 data here.",
+            'success': True,
+            'status': 200,
+            'data': serializer.data,
+            'count': queryset.count(),
+        }
+        return Response(content_data, status=status.HTTP_200_OK)
+
 
 class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
