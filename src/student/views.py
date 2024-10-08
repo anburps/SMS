@@ -296,10 +296,9 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
 class EnrollmentCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.EnrollmentSerializer
     data = Enrollment.objects.all()
-    search_backends = [filters.SearchFilter]
-    search_fields = ['student__first_name', 'student__last_name', 'course__course_name', 'course__course_code']
     
-    def def dispatch(self, request, *args, **kwargs):
+
+    def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
             self.authentication_classes = [BasicAuthentication,TokenAuthentication]
             self.permission_classes = [IsAuthenticated]
@@ -417,10 +416,8 @@ class EntrollmentDetailView(generics.RetrieveUpdateDestroyAPIView):
 class GradeCreateView(GenericAPIView):
     serializer_class = StudentSerializers.GradeSerializer
     data = Enrollment.objects.all()
-    search_backends = [filters.SearchFilter]
-    search_fields = ['student__first_name', 'student__last_name', 'course__course_name', 'course__course_code','grade']
-
-    def def dispatch(self, request, *args, **kwargs):
+    
+    def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
             self.authentication_classes = [BasicAuthentication,TokenAuthentication]
             self.permission_classes = [IsAuthenticated]
