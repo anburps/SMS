@@ -10,7 +10,7 @@ from rest_framework.authentication import BasicAuthentication,TokenAuthenticatio
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
-
+from django.core.cache import cache
 class CustomPageNumberPagination(PageNumberPagination):
     page_size = 2  
     page_size_query_param = 'page_size'  
@@ -55,13 +55,13 @@ class StudentListCreateView(generics.ListCreateAPIView):
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, *args, **kwargs):
-        cached_products = cache.get('product_list')
+        cached_students = cache.get('student_list')
 
-        if cached_products is None:
+        if cached_students is None:
             queryset = self.filter_queryset(self.get_queryset())
 
             if queryset.exists():
-                cache.set('product_list', queryset, timeout=60*2)
+                cache.set('student_list', queryset, timeout=60*10)
             else:
                 content_data = {
                     'provided_by': "SMS API services",
@@ -71,7 +71,7 @@ class StudentListCreateView(generics.ListCreateAPIView):
                 }
                 return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
         else:
-            queryset = cached_products
+            queryset = cached_students
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -93,7 +93,6 @@ class StudentListCreateView(generics.ListCreateAPIView):
             'count': queryset.count(),
         }
         return Response(content_data, status=status.HTTP_200_OK)
-
 
 class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
