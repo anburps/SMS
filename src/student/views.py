@@ -11,10 +11,12 @@ from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from django.core.cache import cache
+
 class CustomPageNumberPagination(PageNumberPagination):
     page_size = 2  
     page_size_query_param = 'page_size'  
     max_page_size = 100  
+
 
 
 class StudentListCreateView(generics.ListCreateAPIView):
@@ -27,7 +29,7 @@ class StudentListCreateView(generics.ListCreateAPIView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
-            self.authentication_classes = [BasicAuthentication,TokenAuthentication]
+            self.authentication_classes = [BasicAuthentication, TokenAuthentication]
             self.permission_classes = [IsAuthenticated]
         elif request.method == 'GET':
             self.authentication_classes = []
@@ -38,6 +40,9 @@ class StudentListCreateView(generics.ListCreateAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+
+            cache.delete('student_list')
+
             content_data = {
                 'provided_by': "SMS API services",
                 'success': True,
@@ -61,7 +66,7 @@ class StudentListCreateView(generics.ListCreateAPIView):
             queryset = self.filter_queryset(self.get_queryset())
 
             if queryset.exists():
-                cache.set('student_list', queryset, timeout=60*10)
+                cache.set('student_list', queryset, timeout=60*1)  # Cache for 15 minutes
             else:
                 content_data = {
                     'provided_by': "SMS API services",
