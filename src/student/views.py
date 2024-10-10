@@ -63,10 +63,11 @@ class StudentListCreateView(generics.ListCreateAPIView):
         cached_students = cache.get('student_list')
 
         if cached_students is None:
+            cache_student_list.delay()  
             queryset = self.filter_queryset(self.get_queryset())
 
             if queryset.exists():
-                cache.set('student_list', queryset, timeout=60*1)  # Cache for 15 minutes
+                pass
             else:
                 content_data = {
                     'provided_by': "SMS API services",
