@@ -13,9 +13,6 @@ from rest_framework.pagination import PageNumberPagination
 from django.core.cache import cache
 from .tasks import cache_student_list 
 
-import random
-from django.utils.crypto import get_random_string
-
 class CustomPageNumberPagination(PageNumberPagination):
     page_size = 2  
     page_size_query_param = 'page_size'  
@@ -33,50 +30,35 @@ class StudentListCreateView(generics.ListCreateAPIView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
-            self.authentication_classes = []
-            self.permission_classes = []
+            self.authentication_classes = [BasicAuthentication, TokenAuthentication]
+            self.permission_classes = [IsAuthenticated]
         elif request.method == 'GET':
             self.authentication_classes = []
             self.permission_classes = [AllowAny]
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        # Simulate creation of 100 students
-        for i in range(100):
-            random_name = get_random_string(length=6)
-            student_data = {
-                "first_name": f"Student_{random_name}",
-                "last_name": f"Last",
-                "gender": random.choice(['M', 'F']),
-                "date_of_birth": "2000-01-01",
-                "email": f"student_{random_name}@example.com",
-                
-                "address": "Random Address",
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+
+            cache.delete('student_list')
+
+            content_data = {
+                'provided_by': "SMS API services",
+                'success': True,
+                'status': 200,
+                'data': serializer.data,
             }
-
-            # Use serializer to save each student
-            serializer = self.get_serializer(data=student_data)
-            if serializer.is_valid():
-                serializer.save()
-            else:
-                content_data = {
-                    'provided_by': "SMS API services",
-                    'success': False,
-                    'status': 400,
-                    'error': serializer.errors,
-                }
-                return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
-
-        # Clear cache after creating all students
-        cache.delete('student_list')
-
-        content_data = {
-            'provided_by': "SMS API services",
-            'success': True,
-            'status': 201,
-            'message': "100 students created successfully",
-        }
-        return Response(content_data, status=status.HTTP_201_CREATED)
+            return Response(content_data, status=status.HTTP_201_CREATED)
+        else:
+            content_data = {
+                'provided_by': "SMS API services",
+                'success': False,
+                'status': 400,
+                'error': serializer.errors,
+            }
+            return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, *args, **kwargs):
         cached_students = cache.get('student_list')
