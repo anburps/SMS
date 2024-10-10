@@ -6,5 +6,6 @@ from .models import Student
 def cache_student_list():
     students = Student.objects.all()
     if students.exists():
+        print("student",students)
         cache.set('student_list', students, timeout=60*15) 
     return "Cached students list"
