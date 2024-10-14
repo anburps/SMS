@@ -62,7 +62,6 @@ class StudentListCreateView(generics.ListCreateAPIView):
 
     def get(self, request, *args, **kwargs):
         cached_students = cache.get('student_list')
-        print("cache",cached_students)
         if cached_students is None:
             cache_student_list.delay()  
             queryset = self.filter_queryset(self.get_queryset())
