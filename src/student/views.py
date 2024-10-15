@@ -212,6 +212,7 @@ class CourseListCreateView(generics.ListCreateAPIView):
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
     def get(self, request, *args, **kwargs):
+        
         queryset = Course.objects.all()
 
         if queryset.exists():
