@@ -64,20 +64,20 @@ class StudentListCreateView(generics.ListCreateAPIView):
         cached_students = cache.get('student_list')
         if cached_students is None:
             cache_student_list.delay()  
-            queryset = self.filter_queryset(self.get_queryset())
+            # queryset = self.filter_queryset(self.get_queryset())
 
-            if queryset.exists():
-                pass
-            else:
-                content_data = {
-                    'provided_by': "SMS API services",
-                    'success': False,
-                    'status': 400,
-                    'error': "No data found",
-                }
-                return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            queryset = cached_students
+            # if queryset.exists():
+            #     pass
+            # else:
+            #     content_data = {
+            #         'provided_by': "SMS API services",
+            #         'success': False,
+            #         'status': 400,
+            #         'error': "No data found",
+            #     }
+            #     return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+        # else:
+        #     queryset = cached_students
 
         page = self.paginate_queryset(queryset)
         if page is not None:
