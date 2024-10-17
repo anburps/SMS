@@ -561,6 +561,10 @@ class AttendanceListView(generic.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        cache_data = cache.get("attendance")
+        if cache_data:
+            return Response(cache_data)
+
         if queryset.exists():
             serializer = self.get_serializer(queryset, many=True)
             content_data = {
@@ -570,6 +574,7 @@ class AttendanceListView(generic.ListAPIView):
                 'data': serializer.data,
                 'count': queryset.count(),
             }
+            cache.set("attendance", content_data,timeout=300)
             return Response(content_data, status=status.HTTP_200_OK)
         else:
             content_data = {
