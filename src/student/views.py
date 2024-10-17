@@ -554,3 +554,61 @@ class AttendanceCreateView(GenericAPIView):
                 'error': serializer.errors,
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+class AttendanceListView(generic.ListAPIView):
+    serializer_class = StudentSerializers.AttendanceSerializer
+    queryset = Attendance.objects.all()
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        cache_data = cache.get("attendance")
+        if cache_data:
+            return Response(cache_data)
+
+        if queryset.exists():
+            serializer = self.get_serializer(queryset, many=True)
+            content_data = {
+                'provided_by': "SMS API services",
+                'success': True,
+                'status': 200,
+                'data': serializer.data,
+                'count': queryset.count(),
+            }
+            cache.set("attendance", content_data,timeout=300)
+            return Response(content_data, status=status.HTTP_200_OK)
+        else:
+            content_data = {
+                'provided_by': "SMS API services",
+                'success': False,
+                'status': 400,
+                'error': "No data found",
+            }
+            return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+
+class AttendanceDetailUpdateView(generic.RetrieveUpdateDestroyAPIView):
+    serializer_class = StudentSerializers.AttendanceSerializer
+    queryset = Attendance.objects.all()
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+
+    def patch(self,request, *args, **kwargs):
+        attendance = self.get_object()
+        serializer = self.get_serializer(attendance, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            content_data = {
+                'provided_by': "SMS API services",
+                'success': True,
+                'status': 200,
+                'data': serializer.data,
+            }
+            return Response(content_data, status=status.HTTP_200_OK)
+        else:
+            content_data = {
+                'provided_by': "SMS API services",
+                'success': False,
+                'status': 400,
+                'error': serializer.errors,
+            }
+            return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
