@@ -557,8 +557,8 @@ class AttendanceCreateView(GenericAPIView):
 class AttendanceListView(generic.ListAPIView):
     serializer_class = StudentSerializers.AttendanceSerializer
     queryset = Attendance.objects.all()
-    authentication_classes = []
-    permission_classes = []
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         if queryset.exists():
