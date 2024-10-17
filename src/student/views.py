@@ -585,3 +585,8 @@ class AttendanceListView(generic.ListAPIView):
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
+class AttendanceDetailUpdateView(generic.RetrieveUpdateDestroyAPIView):
+    serializer_class = StudentSerializers.AttendanceSerializer
+    queryset = Attendance.objects.all()
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
