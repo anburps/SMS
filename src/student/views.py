@@ -306,6 +306,10 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
 class EnrollmentCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.EnrollmentSerializer
     data = Enrollment.objects.all()
+    filter_backends = [SearchFilter]
+    search_fields = ['course_name', 'course_code']
+    ordering_fields = ['id', 'course_name', 'course_code', 'description', 'credits', 'duration_weeks', 'start_date', 'end_date']
+
     
 
     def dispatch(self, request, *args, **kwargs):
