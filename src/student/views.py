@@ -105,7 +105,7 @@ class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StudentSerializers.StudentDetailSerializer
     authentication_classes = [BasicAuthentication,TokenAuthentication]
     permission_classes = [IsAuthenticated]
-
+    lookup_field = 'id'
     def get_object(self):
         try:
             return Student.objects.get(id=self.kwargs['id'])
@@ -182,6 +182,7 @@ class CourseListCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.CourseDetailSerializer
     filter_backends = [SearchFilter]
     search_fields = ['course_name', 'course_code']
+    ordering_fields = ['id', 'course_name', 'course_code', 'description', 'credits', 'duration_weeks', 'start_date', 'end_date']
 
     def dispatch(self, request, *args, **kwargs):
         if request.method == 'POST':
@@ -305,6 +306,10 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
 class EnrollmentCreateView(generics.ListCreateAPIView):
     serializer_class = StudentSerializers.EnrollmentSerializer
     data = Enrollment.objects.all()
+    filter_backends = [SearchFilter]
+    search_fields = ['course_name', 'course_code']
+    ordering_fields = ['id', 'course_name', 'course_code', 'description', 'credits', 'duration_weeks', 'start_date', 'end_date']
+
     
 
     def dispatch(self, request, *args, **kwargs):
@@ -455,6 +460,12 @@ class GradeCreateView(GenericAPIView):
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
+class GradeListView(generic.ListAPIView):
+    serializer_class = StudentSerializers.AttendanceSerializer
+    queryset = Attendance.objects.all()
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request, *args, **kwargs):
         if queryset.exists():
             serializer = self.get_serializer(queryset, many=True)
@@ -590,6 +601,7 @@ class AttendanceDetailUpdateView(generic.RetrieveUpdateDestroyAPIView):
     queryset = Attendance.objects.all()
     authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    search_fields = ['student']
     
 
     def patch(self,request, *args, **kwargs):
