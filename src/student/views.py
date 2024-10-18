@@ -105,7 +105,7 @@ class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StudentSerializers.StudentDetailSerializer
     authentication_classes = [BasicAuthentication,TokenAuthentication]
     permission_classes = [IsAuthenticated]
-
+    lookup_field = 'id'
     def get_object(self):
         try:
             return Student.objects.get(id=self.kwargs['id'])
