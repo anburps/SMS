@@ -466,9 +466,13 @@ class GradeListView(generic.ListAPIView):
     authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [SearchFilter]
-    search_fields = ['course_name', 'course_code']
+    search_fields = ['student__name']
+    ordering_fields = ['student__name']
+    pagination_class = pagination.PageNumberPagination
+
     def get(self, request, *args, **kwargs):
         if queryset.exists():
+            
             serializer = self.get_serializer(queryset, many=True)
             content_data = {
                 'provided_by': "SMS API services",
