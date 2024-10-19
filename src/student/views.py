@@ -486,7 +486,7 @@ class GradeListView(generic.ListAPIView):
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
-class GradeDetailView(GenericAPIView):
+class GradeDetailView(generic.RetrieveUpdateDestroyAPIView):
     serializer_class = StudentSerializers.GradeSerializer
     
     def put(self, request, *args, **kwargs):
