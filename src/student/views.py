@@ -465,7 +465,8 @@ class GradeListView(generic.ListAPIView):
     queryset = Attendance.objects.all()
     authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    
+    filter_backends = [SearchFilter]
+    search_fields = ['course_name', 'course_code']
     def get(self, request, *args, **kwargs):
         if queryset.exists():
             serializer = self.get_serializer(queryset, many=True)
