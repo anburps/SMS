@@ -542,7 +542,7 @@ class GradeDetailView(GenericAPIView):
         }
         return Response(content_data, status=status.HTTP_204_NO_CONTENT)
         
-class AttendanceCreateView(GenericAPIView):
+class AttendanceCreateView(generic.CreateAPIView):
     serializer_class = StudentSerializers.AttendanceSerializer
 
 
