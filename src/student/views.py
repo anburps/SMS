@@ -427,7 +427,7 @@ class EntrollmentDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Response(content_data, status=status.HTTP_204_NO_CONTENT)
 
 
-class GradeCreateView(GenericAPIView):
+class GradeCreateView(generic.CreateAPIView):
     serializer_class = StudentSerializers.GradeSerializer
     data = Enrollment.objects.all()
     
