@@ -427,7 +427,7 @@ class EntrollmentDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Response(content_data, status=status.HTTP_204_NO_CONTENT)
 
 
-class GradeCreateView(GenericAPIView):
+class GradeCreateView(generic.CreateAPIView):
     serializer_class = StudentSerializers.GradeSerializer
     data = Enrollment.objects.all()
     
@@ -465,18 +465,23 @@ class GradeListView(generic.ListAPIView):
     queryset = Attendance.objects.all()
     authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    
+    filter_backends = [SearchFilter]
+    search_fields = ['student__name']
+    ordering_fields = ['student__name']
+    pagination_class = pagination.PageNumberPagination
+
     def get(self, request, *args, **kwargs):
-        if queryset.exists():
-            serializer = self.get_serializer(queryset, many=True)
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
             content_data = {
                 'provided_by': "SMS API services",
                 'success': True,
                 'status': 200,
                 'data': serializer.data,
-                'count': queryset.count(),
             }
-            return Response(content_data, status=status.HTTP_200_OK)
+            return self.get_paginated_response(content_data)
         else:
             content_data = {
                 'provided_by': "SMS API services",
@@ -486,7 +491,9 @@ class GradeListView(generic.ListAPIView):
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
-class GradeDetailView(GenericAPIView):
+
+
+class GradeDetailView(generic.RetrieveUpdateDestroyAPIView):
     serializer_class = StudentSerializers.GradeSerializer
     
     def put(self, request, *args, **kwargs):
@@ -542,7 +549,7 @@ class GradeDetailView(GenericAPIView):
         }
         return Response(content_data, status=status.HTTP_204_NO_CONTENT)
         
-class AttendanceCreateView(GenericAPIView):
+class AttendanceCreateView(generic.CreateAPIView):
     serializer_class = StudentSerializers.AttendanceSerializer
 
 
