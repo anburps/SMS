@@ -670,7 +670,7 @@ class TeacherCreateView(generic.CreateAPIView):
 class TeacherListView(generic.ListAPIView):
     serializer_class = StudentSerializers.AttendanceSerializer
     queryset = Attendance.objects.all()
-    # authentication_classes = [BasicAuthentication, TokenAuthentication]
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
