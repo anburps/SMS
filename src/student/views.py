@@ -723,4 +723,15 @@ class TeacherDetailView(generic.RetrieveUpdateDestroyAPIView):
                 'error': serializer.errors,
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, *args, **kwargs):
+        teacher=self.get_object()
+        teacher.delete()
+        content_data = {
+            'provided_by': "SMS API services",
+            'success': True,
+            'status': 204,
+            'message': "Teacher successfully deleted."
+        }
+        return Response(content_data, status=status.HTTP_204_NO_CONTENT)
+
 
