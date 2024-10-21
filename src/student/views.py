@@ -700,7 +700,8 @@ class TeacherListView(generic.ListAPIView):
 class TeacherDetailView(generic.RetrieveUpdateDestroyAPIView):
     serializer_class = StudentSerializers.TeacherSerializer
     queryset = Teacher.objects.all()
-  
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def patch(self, request, *args, **kwargs):
         teacher = self.get_object()
