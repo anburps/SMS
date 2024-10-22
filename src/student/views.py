@@ -608,9 +608,6 @@ class AttendanceDetailUpdateView(generic.RetrieveUpdateDestroyAPIView):
     queryset = Attendance.objects.all()
     authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    search_fields = ['student']
-    
-
     def patch(self,request, *args, **kwargs):
         attendance = self.get_object()
         serializer = self.get_serializer(attendance, data=request.data, partial=True)
