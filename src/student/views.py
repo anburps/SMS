@@ -577,6 +577,8 @@ class AttendanceListView(generic.ListAPIView):
     queryset = Attendance.objects.all()
     authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter]
+
 
     def get(self, request, *args, **kwargs):
         cache_data = cache.get("attendance")
