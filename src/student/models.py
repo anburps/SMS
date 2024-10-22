@@ -59,9 +59,18 @@ class Teacher(models.Model):
     department      = models.CharField(max_length=100)
     hire_date       = models.DateField(auto_now_add=True)
     profile_picture = models.ImageField(upload_to='teacher_pics/', blank=True, null=True)
+    employee_id     = models.CharField(max_length=20)
 
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+    
+   def save(self, *args, **kwargs):
+        if not self.employee_id:
+            department_abbr = self.department[:3].upper()
+            unique_number = str(uuid.uuid4())[:5]
+            self.employee_id = f"{department_abbr}{unique_number}"
+
+        super().save(*args, **kwargs) 
 
     def __str__(self):
         return self.full_name()
