@@ -21,3 +21,5 @@ def send_email_after_student_creation(sender, instance, created, **kwargs):
         from_email = settings.DEFAULT_FROM_EMAIL 
         recipient_list = [instance.email] 
         send_mail(subject, message, from_email, recipient_list)
+
+@
