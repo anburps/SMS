@@ -64,10 +64,13 @@ class Teacher(models.Model):
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
     
-   #Employee id auto generate
-   def 
+   def save(self, *args, **kwargs):
+        if not self.employee_id:
+            department_abbr = self.department[:3].upper()
+            unique_number = str(uuid.uuid4())[:5]
+            self.employee_id = f"{department_abbr}{unique_number}"
 
-        
+        super().save(*args, **kwargs) 
 
     def __str__(self):
         return self.full_name()
