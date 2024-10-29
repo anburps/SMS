@@ -759,8 +759,9 @@ class AssignmentCreateView(generic.CreateAPIView):
 class AssignmentListView(generic.ListAPIView):
     serializer_class = StudentSerializers.AssignmentSerializer
     queryset = Assignment.objects.all()
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = pagination.PageNumberPagination
-
     def get(self,request,*args,**kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
