@@ -58,6 +58,7 @@ admin.site.register(Grade, GradeAdmin)
 admin.site.register(Attendance, AttendanceAdmin)
 admin.site.register(Assignment, AssignmentAdmin)
 
+
 admin.site_header = "SMS"
 admin.site_title = "SMS"
 admin.site_index_title = "SMS"
