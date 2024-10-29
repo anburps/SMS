@@ -761,6 +761,9 @@ class AssignmentListView(generic.ListAPIView):
     queryset = Assignment.objects.all()
     authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter, OrderingFilter,DjangobackendFilter]
+    search_fields = ['title']
+    ordering_fields = ['title']
     pagination_class = pagination.PageNumberPagination
     def get(self,request,*args,**kwargs):
         queryset = self.filter_queryset(self.get_queryset())
