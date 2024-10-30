@@ -701,7 +701,7 @@ class TeacherDetailView(generic.RetrieveUpdateDestroyAPIView):
     queryset = Teacher.objects.all()
     authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
-
+    lookup_field    =   'id'
     def patch(self, request, *args, **kwargs):
         teacher = self.get_object()
         serializer = self.get_serializer(teacher, data=request.data, partial=True)
