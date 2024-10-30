@@ -792,7 +792,8 @@ class AssignmentListView(generic.ListAPIView):
 class AttenanceDetialsView(generics.RetrieveAPIView):
     serializer_class = StudentSerializers.AttendanceSerializer
     queryset = Attendance.objects.all()
-   
+    authentication_classes = [BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def patch(self,request, *args, **kwargs):
         attendance = self.get_object()
