@@ -794,6 +794,7 @@ class AttenanceDetialsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Attendance.objects.all()
     authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    lookup_field    = 'id'
 
     def patch(self,request, *args, **kwargs):
         attendance = self.get_object()
