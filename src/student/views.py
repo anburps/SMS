@@ -818,6 +818,9 @@ class AttenanceDetialsView(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, *args, **kwargs):
         attendance=self.get_object()
         attendance.delete()
+        if not Attendance.objects.exists():
+            cache.clear()
+
         content_data = {
             'provided_by': "SMS API services",
             'success': True,
