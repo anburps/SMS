@@ -671,7 +671,9 @@ class TeacherListView(generic.ListAPIView):
     queryset = Attendance.objects.all()
     authentication_classes = [BasicAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    filter_backends = [SearchFilter]
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_field    = ['name']
+    ordering_field  = ['name']
     pagination_class = pagination.PageNumberPagination
 
 
