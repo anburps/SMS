@@ -204,7 +204,7 @@ class CourseCreateView(generics.CreateAPIView):
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
 
-class CourseListCreateView(generics.ListCreateAPIView):
+class CourseListView(generics.ListAPIView):
     serializer_class = StudentSerializers.CourseDetailSerializer
     filter_backends = [SearchFilter]
     search_fields = ['course_name', 'course_code']
