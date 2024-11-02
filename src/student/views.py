@@ -18,7 +18,7 @@ class CustomPageNumberPagination(PageNumberPagination):
     page_size_query_param = 'page_size'  
     max_page_size = 100  
 
-class studentCreate(generics.CreateAPIView):
+class StudentCreate(generics.CreateAPIView):
     serializer_class = StudentSerializers.StudentDetailSerializer
 
     def post(self, request, *args, **kwargs):
