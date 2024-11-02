@@ -179,20 +179,10 @@ class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
         }
         return Response(content_data, status=status.HTTP_204_NO_CONTENT)
 
-class CourseListCreateView(generics.ListCreateAPIView):
+class CourseCreateView(generics.CreateAPIView):
     serializer_class = StudentSerializers.CourseDetailSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ['course_name', 'course_code']
-    ordering_fields = ['id', 'course_name', 'course_code', 'description', 'credits', 'duration_weeks', 'start_date', 'end_date']
-
-    def dispatch(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            self.authentication_classes = [BasicAuthentication,TokenAuthentication]
-            self.permission_classes = [IsAuthenticated]
-        elif request.method == 'GET':
-            self.authentication_classes = []
-            self.permission_classes = [AllowAny]
-        return super().dispatch(request, *args, **kwargs)
+    authentication_class = [ BasicAuthentication,TokenAuthentication ]
+    permission_class = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -213,6 +203,22 @@ class CourseListCreateView(generics.ListCreateAPIView):
                 'error': serializer.errors,
             }
             return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
+
+class CourseListCreateView(generics.ListCreateAPIView):
+    serializer_class = StudentSerializers.CourseDetailSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['course_name', 'course_code']
+    ordering_fields = ['id', 'course_name', 'course_code', 'description', 'credits', 'duration_weeks', 'start_date', 'end_date']
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            self.authentication_classes = [BasicAuthentication,TokenAuthentication]
+            self.permission_classes = [IsAuthenticated]
+        elif request.method == 'GET':
+            self.authentication_classes = []
+            self.permission_classes = [AllowAny]
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
         course_details_list=cache.get("course_details")
         if course_details_list:
