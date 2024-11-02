@@ -307,7 +307,7 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
         }
         return Response(content_data, status=status.HTTP_204_NO_CONTENT)
 
-class EnrollmentCreateView(generics.ListCreateAPIView):
+class EnrollmentListView(generics.ListAPIView):
     serializer_class = StudentSerializers.EnrollmentSerializer
     data = Enrollment.objects.all()
     filter_backends = [SearchFilter]
@@ -317,34 +317,13 @@ class EnrollmentCreateView(generics.ListCreateAPIView):
     
 
     def dispatch(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            self.authentication_classes = [BasicAuthentication,TokenAuthentication]
-            self.permission_classes = [IsAuthenticated]
-        elif request.method == 'GET':
+        
+        if request.method == 'GET':
             self.authentication_classes = []
             self.permission_classes = [AllowAny]
         return super().dispatch(request, *args, **kwargs)
     
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            content_data = {
-                'provided_by': "SMS API services",
-                'success': True,
-                'status': 200,
-                'data': serializer.data,
-            }
-            return Response(content_data, status=status.HTTP_200_OK)
-        else:
-            content_data = {
-                'provided_by': "SMS API services",
-                'success': False,
-                'status': 400,
-                'error': serializer.errors,
-            }
-            return Response(content_data, status=status.HTTP_400_BAD_REQUEST)
-
+   
     def get(self, request, *args, **kwargs):
         if queryset.exists():
             serializer = self.get_serializer(queryset, many=True)
