@@ -211,10 +211,8 @@ class CourseListCreateView(generics.ListCreateAPIView):
     ordering_fields = ['id', 'course_name', 'course_code', 'description', 'credits', 'duration_weeks', 'start_date', 'end_date']
 
     def dispatch(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            self.authentication_classes = [BasicAuthentication,TokenAuthentication]
-            self.permission_classes = [IsAuthenticated]
-        elif request.method == 'GET':
+        
+        if request.method == 'GET':
             self.authentication_classes = []
             self.permission_classes = [AllowAny]
         return super().dispatch(request, *args, **kwargs)
