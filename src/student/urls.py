@@ -16,5 +16,7 @@ urlpatterns = [
     path('grade/detail/', GradeDetailView.as_view(), name='grade-detail'),
 
     path('attendance/create/', AttendanceCreateView.as_view(), name='attendance-create'),
+    path('attendance/list/', AttendanceListView.as_view(), name='attendance-list'),
+
    
 ]
