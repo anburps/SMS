@@ -13,7 +13,8 @@ urlpatterns = [
     path('enrollment/detail/', EnrollmentDetailView.as_view(), name='Enrollment-detail'),
     path('grade/create/', GradeCreateView.as_view(), name='grade-create'),
     path('grade/list/', GradelistView.as_view(), name='grade-list'),
+    path('grade/detail/', GradeDetailView.as_view(), name='grade-detail'),
 
     path('attendance/create/', AttendanceCreateView.as_view(), name='attendance-create'),
-    path('')
+   
 ]
