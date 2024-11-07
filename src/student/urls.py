@@ -9,6 +9,8 @@ urlpatterns = [
     path('course/list', CourseListView.as_view(), name='course-list'),
     path('course/detail/', CourseDetailView.as_view(), name='course-create'),
     path('enrollment/create/', EnrollmentCreateView.as_view(), name='enrollment-create'),
+    path('enrollment/list/',EnrollmentListView.as_view(),name='enrollment_list'),
     path('grade/create/', GradeCreateView.as_view(), name='grade-create'),
     path('attendance/create/', AttendanceCreateView.as_view(), name='attendance-create'),
+    path('')
 ]
